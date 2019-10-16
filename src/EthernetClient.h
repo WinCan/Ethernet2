@@ -27,6 +27,12 @@ public:
   virtual bool operator==(const EthernetClient&);
   virtual bool operator!=(const EthernetClient& rhs) { return !this->operator==(rhs); };
 
+   
+  // ACH - added
+  uint8_t *getRemoteIP(uint8_t remoteIP[]); // ACH
+  uint16_t getRemotePort(); // ACH
+  IPAddress getRemoteIP();
+
   friend class EthernetServer;
   
   using Print::write;
@@ -34,6 +40,9 @@ public:
 private:
   static uint16_t _srcport;
   uint8_t _sock;
+
+  // ACH - added
+  uint16_t _dstport; // ACH
 };
 
 #endif

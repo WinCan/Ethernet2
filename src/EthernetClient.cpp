@@ -140,6 +140,8 @@ void EthernetClient::stop() {
     close(_sock);
 
   EthernetClass::_server_port[_sock] = 0;
+  // ACH - added
+  EthernetClass::_client_port[_sock] = 0; // ACH
   _sock = MAX_SOCK_NUM;
 }
 
@@ -165,4 +167,23 @@ EthernetClient::operator bool() {
 
 bool EthernetClient::operator==(const EthernetClient& rhs) {
   return _sock == rhs._sock && _sock != MAX_SOCK_NUM && rhs._sock != MAX_SOCK_NUM;
+}
+
+// ACH - added
+uint8_t *EthernetClient::getRemoteIP(uint8_t remoteIP[]) // ACH
+{
+  w5500.readSnDIPR(_sock, remoteIP);
+  return remoteIP;
+}
+
+IPAddress EthernetClient::getRemoteIP()
+{
+  IPAddress ret;
+  getRemoteIP(rawIPAddress(ret));
+  return ret;
+}
+ 
+uint16_t EthernetClient::getRemotePort() // ACH
+{
+  return w5500.readSnDPORT(_sock);
 }

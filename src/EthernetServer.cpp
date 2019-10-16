@@ -57,11 +57,23 @@ EthernetClient EthernetServer::available()
     if (EthernetClass::_server_port[sock] == _port &&
         (client.status() == SnSR::ESTABLISHED ||
          client.status() == SnSR::CLOSE_WAIT)) {
-      if (client.available()) {
-        // XXX: don't always pick the lowest numbered socket.
+        // ACH - added
+        // See if we have identified this one before
+      if (EthernetClass::_client_port[sock] == 0 ) {
+        client._dstport = client.getRemotePort();
+        EthernetClass::_client_port[sock] = client._dstport;
         return client;
       }
-    }
+      if (EthernetClass::_client_port[sock] != client._dstport) {
+        // Not us!
+        continue;
+      }
+      // ACH - end of additions
+      //if (client.available()) { // ACH - comment out
+      // XXX: don't always pick the lowest numbered socket.
+      return client;
+  //} // ACH - comment out
+    } 
   }
 
   return EthernetClient(MAX_SOCK_NUM);
@@ -82,6 +94,8 @@ size_t EthernetServer::write(const uint8_t *buffer, size_t size)
     EthernetClient client(sock);
 
     if (EthernetClass::_server_port[sock] == _port &&
+      // ACH - added
+      EthernetClass::_client_port[sock] == client._srcport && // ACH
       client.status() == SnSR::ESTABLISHED) {
       n += client.write(buffer, size);
     }

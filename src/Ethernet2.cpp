@@ -14,6 +14,8 @@
 // XXX: don't make assumptions about the value of MAX_SOCK_NUM.
 uint8_t EthernetClass::_state[MAX_SOCK_NUM] = { 0, };
 uint16_t EthernetClass::_server_port[MAX_SOCK_NUM] = { 0, };
+// ACH - added
+uint16_t EthernetClass::_client_port[MAX_SOCK_NUM] = { 0, }; // ACH
 
 
 
